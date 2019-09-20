@@ -14,7 +14,7 @@ try:
   sock.settimeout(2)
   sock.connect((IPAddress,Port))
 except Exception as e:
-  print "Could not connect to robot: ",e
+  print("Could not connect to robot: ",e)
   print("Socket connect failed!")
   exit()
 
