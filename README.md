@@ -3,5 +3,8 @@ Bimur (Bi-manual UR5). This repository is for packages related to UR5 at AIR Lab
 
 <img src="pics/Bimur.png" align="middle">
 
+# Right Arm
 
+## Gazebo + MoveIt Rviz:
 
+`roslaunch bimur_bringup bimur_right_arm_gazebo.launch`

@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="ur5" >
+
+  <!-- common stuff -->
+  <xacro:include filename="$(find ur_description)/urdf/common.gazebo.xacro" />
+
+  <!-- ur5 -->
+  <xacro:include filename="$(find ur_description)/urdf/ur5.urdf.xacro" />
+
+  <!-- Right arm -->
+  <xacro:ur5_robot prefix="" joint_limited="false"/>
+
+  <!-- robotiq 85 -->
+  <xacro:include filename="$(find robotiq_85_description)/urdf/robotiq_85_gripper.urdf.xacro" />
+
+  <!-- Right robotiq 85 -->
+  <xacro:robotiq_85_gripper prefix="" parent="ee_link" >
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </xacro:robotiq_85_gripper>
+  
+  <link name="world"/>
+
+  <link name="frame">
+    <inertial>
+      <origin rpy  ="0.0 0 0" xyz="0.0 0.0 0.0"/>
+      <mass value="27.21"/>
+      <inertia
+        ixx="5.01" ixy="0.0" ixz="0.0"
+        iyy="5.07" iyz="0.0"
+        izz="3.20"/>
+    </inertial>
+    <collision>
+      <origin rpy="0.0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://bimur_description/meshes/objects/UR5Frame.STL"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin rpy="0.0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://bimur_description/meshes/objects/UR5Frame.STL"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <link name="wall">
+    <inertial>
+      <origin xyz="0.23 0 0.755" rpy="0 0 0" />
+      <mass value="1"/>
+      <inertia
+        ixx="0.07" ixy="0.0" ixz="0.0"
+        iyy="0.40" iyz="0.0"
+        izz="0.33"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <box size="2 2 0.05"/>
+      </geometry>
+      <material name="blue">
+        <color rgba="0 0 .8 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="2 2 0.05"/>
+      </geometry>
+    </collision>
+  </link>
+
+ <joint name="frame_to_world" type="fixed">
+    <parent link="world"/>
+    <child link="frame"/>
+    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+  </joint>
+
+  <joint name="wall_to_world" type="fixed">
+      <parent link="world"/>
+      <child link="wall"/>
+      <origin xyz="0.5 1.02 1" rpy="${90*pi/180} 0 0"/>
+  </joint>
+
+  <!-- right arm -->
+  <joint name="ur5_to_frame" type="fixed">
+    <parent link="frame"/>
+    <child link = "base_link"/>
+    <origin xyz="0.265 0.635 1.275" rpy="${0*pi/180} ${225*pi/180}  ${0*pi/180}"/>
+  </joint> 
+
+</robot>
