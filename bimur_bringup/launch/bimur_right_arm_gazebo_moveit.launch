@@ -41,4 +41,9 @@
     <arg name="sim" default="$(arg sim)" />
   </include>
 
+  <include file="$(find bimur_right_arm_moveit_config)/launch/moveit_rviz.launch">
+    <arg name="debug" default="$(arg debug)" />
+    <arg name="config" default="true" />
+  </include>
+
 </launch>
