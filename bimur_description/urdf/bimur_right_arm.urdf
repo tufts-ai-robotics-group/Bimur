@@ -720,13 +720,13 @@
         <collision>
             <origin rpy="0.0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://bimur_description/meshes/objects/UR5Frame.STL" />
+                <mesh filename="package://bimur_description/meshes/UR5Frame.STL" />
             </geometry>
         </collision>
         <visual>
             <origin rpy="0.0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://bimur_description/meshes/objects/UR5Frame.STL" />
+                <mesh filename="package://bimur_description/meshes/UR5Frame.STL" />
             </geometry>
         </visual>
     </link>

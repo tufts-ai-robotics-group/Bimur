@@ -41,6 +41,4 @@
     <arg name="sim" default="$(arg sim)" />
   </include>
 
-  <node pkg="bimur_manipulation" name="execute_trajectory" type="execute_trajectory.py" output="screen"/>
-
 </launch>
