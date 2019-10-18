@@ -29,17 +29,23 @@
      -J wrist_3_joint -1.29 
      -unpause" />
  -->
-  <include file="$(find ur_gazebo)/launch/controller_utils.launch"/>
+<!--   <include file="$(find ur_gazebo)/launch/controller_utils.launch"/>
 
   <rosparam file="$(find ur_gazebo)/controller/arm_controller_ur5.yaml" command="load"/>
   <rosparam file="$(find robotiq_85_gazebo)/controller/gripper_controller_robotiq.yaml" command="load"/>
 
   <node name="arm_controller_spawner" pkg="controller_manager" type="controller_manager" args="spawn arm_controller gripper" respawn="false" output="screen"/>
-
+ -->
   <include file="$(find bimur_right_arm_moveit_config)/launch/ur5_moveit_planning_execution.launch">
     <arg name="debug" default="$(arg debug)" />
     <arg name="sim" default="$(arg sim)" />
   </include>
+
+  <!-- We do not have a robot connected, so publish fake joint states -->
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+    <param name="use_gui" value="true"/>
+    <rosparam param="source_list">[/gripper/follow_joint_trajectory]</rosparam>
+  </node>
 
   <include file="$(find bimur_right_arm_moveit_config)/launch/moveit_rviz.launch">
     <arg name="debug" default="$(arg debug)" />

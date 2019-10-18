@@ -84,7 +84,7 @@
   <joint name="ur5_to_frame" type="fixed">
     <parent link="frame"/>
     <child link = "base_link"/>
-    <origin xyz="0.265 0.635 1.275" rpy="${0*pi/180} ${225*pi/180}  ${0*pi/180}"/>
+    <origin xyz="0.265 0.635 1.275" rpy="${-45*pi/180} ${180*pi/180}  ${90*pi/180}"/>
   </joint> 
 
 </robot>
