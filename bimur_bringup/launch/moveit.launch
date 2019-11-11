@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="sim" default="false" />
+  <arg name="debug" default="false"/>
+
+  <include file="$(find bimur_right_arm_moveit_config)/launch/ur5_moveit_planning_execution.launch">
+    <arg name="debug" default="$(arg debug)" />
+    <arg name="sim" default="$(arg sim)" />
+  </include>
+
+  <include file="$(find bimur_right_arm_moveit_config)/launch/moveit_rviz.launch">
+    <arg name="debug" default="$(arg debug)" />
+    <arg name="config" default="true" />
+  </include>
+
+</launch>

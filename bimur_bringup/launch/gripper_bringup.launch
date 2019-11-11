@@ -1,0 +1,16 @@
+<launch>
+    <arg name="comport" default="/dev/ttyUSB0"/>
+    <arg name="baud" default="115200"/>
+	        
+    <!-- Robotiq 85 ROS Driver -->
+    <node pkg="robotiq_85_driver" type="robotiq_85_driver" name="robotiq_85_driver" respawn="true" output="screen">
+        <param name="num_grippers" value="1"/>
+        <param name="comport" value="$(arg comport)" />
+        <param name="baud" value="$(arg baud)" />
+    </node>
+
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+        <rosparam param="source_list">[/gripper/joint_states]</rosparam>
+    </node>
+
+</launch>
