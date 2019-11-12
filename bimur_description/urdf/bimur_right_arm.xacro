@@ -16,12 +16,12 @@
   />
 
   <!-- robotiq 85 -->
-<!--   <xacro:include filename="$(find robotiq_85_description)/urdf/robotiq_85_gripper.urdf.xacro" /> -->
+  <xacro:include filename="$(find robotiq_85_description)/urdf/robotiq_85_gripper.urdf.xacro" />
 
   <!-- Right robotiq 85 -->
-<!--   <xacro:robotiq_85_gripper prefix="" parent="ee_link" >
-    <origin xyz="0.1 0 0" rpy="0 0 0"/>
-  </xacro:robotiq_85_gripper> -->
+  <xacro:robotiq_85_gripper prefix="" parent="ee_link" >
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </xacro:robotiq_85_gripper>
   
 
   <link name="world"/>
