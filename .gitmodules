@@ -1,0 +1,9 @@
+[submodule "robotiq_85_gripper"]
+	path = robotiq_85_gripper
+	url = https://github.com/StanleyInnovation/robotiq_85_gripper
+[submodule "ur_modern_driver"]
+	path = ur_modern_driver
+	url = https://github.com/ros-industrial/ur_modern_driver
+[submodule "universal_robot"]
+	path = universal_robot
+	url = https://github.com/ros-industrial/universal_robot
