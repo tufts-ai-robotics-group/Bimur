@@ -38,6 +38,7 @@
   <node name="ur_driver" pkg="ur_modern_driver" type="ur_driver" output="screen">
   <!-- copy the specified IP address to be consistant with ROS-Industrial spec. -->
     <remap from="joint_states" to="arm/joint_states"/>
+    <remap from="follow_joint_trajectory" to="arm_controller/follow_joint_trajectory"/>
     <param name="prefix" type="str" value="$(arg prefix)" />
     <param name="robot_ip_address" type="str" value="$(arg robot_ip)" />
     <param name="reverse_ip_address" type="str" value="$(arg reverse_ip)" />

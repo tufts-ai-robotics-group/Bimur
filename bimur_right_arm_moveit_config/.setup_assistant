@@ -6,6 +6,6 @@ moveit_setup_assistant_config:
   SRDF:
     relative_path: config/ur5.srdf
   CONFIG:
-    author_name: Faizan Muhammad
-    author_email: faizan.muhammad@tufts.edu
-    generated_timestamp: 1573521891
+    author_name: Gyan Tatiya
+    author_email: Gyan.Tatiya@tufts.edu
+    generated_timestamp: 1573845042

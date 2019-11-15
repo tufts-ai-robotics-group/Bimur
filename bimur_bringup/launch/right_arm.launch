@@ -27,9 +27,9 @@
   <!-- <include file="$(find bimur_bringup)/launch/moveit.launch"/>
  -->
 
-  <include file="$(find bimur_right_arm_moveit)/launch/move_group.launch"/>
+  <include file="$(find bimur_right_arm_moveit_config)/launch/move_group.launch"/>
 
-  <include file="$(find bimur_right_arm_moveit)/launch/moveit_rviz.launch">
+  <include file="$(find bimur_right_arm_moveit_config)/launch/moveit_rviz.launch">
     <arg name="config" default="true"/>
   </include>
 

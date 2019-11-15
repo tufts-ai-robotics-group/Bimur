@@ -1,12 +1,12 @@
 <package>
 
-  <name>bimur_right_arm_moveit</name>
+  <name>bimur_right_arm_moveit_config</name>
   <version>0.3.0</version>
   <description>
      An automatically generated package with all the configuration and launch files for using the ur5 with the MoveIt! Motion Planning Framework
   </description>
-  <author email="faizan.muhammad@tufts.edu">Faizan Muhammad</author>
-  <maintainer email="faizan.muhammad@tufts.edu">Faizan Muhammad</maintainer>
+  <author email="Gyan.Tatiya@tufts.edu">Gyan Tatiya</author>
+  <maintainer email="Gyan.Tatiya@tufts.edu">Gyan Tatiya</maintainer>
 
   <license>BSD</license>
 
