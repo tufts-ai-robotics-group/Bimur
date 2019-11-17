@@ -1,0 +1,7 @@
+<launch>
+	<node pkg="robot_pose_publisher" type="robot_pose_publisher" name="ee_pos_pub" >
+        <param name="map_frame" value="world"/>
+        <param name="base_frame" value="ee_link"/>
+        <remap from="robot_pose" to="ee_pose"/>
+    </node>
+</launch>
