@@ -68,6 +68,30 @@
     </collision>
   </link>
 
+    <link name="ramp">
+    <inertial>
+      <origin xyz="0.5 0 0.755" rpy="0 0 0" />
+      <mass value="1"/>
+      <inertia
+        ixx="0.07" ixy="0.0" ixz="0.0"
+        iyy="0.40" iyz="0.0"
+        izz="0.33"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <box size="0.5 0.5 0.05"/>
+      </geometry>
+      <material name="orange">
+        <color rgba="0 0 .8 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.5 0.5 0.05"/>
+      </geometry>
+    </collision>
+  </link>
+  
  <joint name="frame_to_world" type="fixed">
     <parent link="world"/>
     <child link="frame"/>
@@ -86,5 +110,13 @@
     <child link = "base_link"/>
     <origin xyz="0.265 0.635 1.275" rpy="${-45*pi/180} ${180*pi/180}  ${90*pi/180}"/>
   </joint> 
+  
+    <!-- ramp -->
+  <joint name="ramp_to_frame" type="fixed">
+    <parent link="frame"/>
+    <child link = "base_link"/>
+    <origin xyz="0.5 0 0.755" rpy="0.0 0.0 0.0"/>
+  </joint> 
+  
 
 </robot>
