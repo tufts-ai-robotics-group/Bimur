@@ -92,7 +92,7 @@ arm_group.set_named_target('zero')
 arm_group.go(wait=True)
 print("Point 1")
 
-'''
+#'''
 
 pose = arm_group.get_current_pose().pose
 
@@ -140,4 +140,5 @@ arm_group.set_joint_value_target([-0.21957805043352518, -1.097296859939564, 1.89
                             -2.366067038969164, -1.571228181260084, -1.0061550793898952])
 arm_group.go(wait=True)
 print("Point 7")
-'''
+
+#'''
