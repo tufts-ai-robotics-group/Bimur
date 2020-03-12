@@ -5,6 +5,11 @@ Bimur (Bi-manual UR5). This repository is for packages related to UR5 at AIR Lab
 
 # Right Arm
 
+## Rviz
+Launch URDF in Rviz for visualization
+
+`roslaunch bimur_description bimur_right_arm_rviz.launch `
+
 ## Gazebo + MoveIt Rviz:
 
 `roslaunch bimur_bringup bimur_right_arm_gazebo_moveit.launch`
@@ -24,5 +29,5 @@ rosrun bimur_manipulation execute_trajectory.py
 
 `roslaunch bimur_bringup robotiq_gripper.launch`
 
-https://github.com/ros-industrial/robotiq
+https://github.com/ros-industrial/robotiq <br>
 http://wiki.ros.org/robotiq/Tutorials/Control%20of%20a%202-Finger%20Gripper%20using%20the%20Modbus%20RTU%20protocol%20%28ros%20kinetic%20and%20newer%20releases%29
