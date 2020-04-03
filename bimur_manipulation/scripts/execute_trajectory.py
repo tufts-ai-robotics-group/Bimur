@@ -88,7 +88,7 @@ block_pose = Pose(position=Point(x=0.4, y=0.05, z=0.75))
 delete_gazebo_model([block_name])
 spawn_gazebo_model(block_path, block_name, block_pose)
 
-arm_group.set_named_target('zero')
+arm_group.set_named_target('ready')
 arm_group.go(wait=True)
 print("Point 1")
 

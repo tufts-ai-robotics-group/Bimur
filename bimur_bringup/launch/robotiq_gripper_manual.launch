@@ -1,9 +1,0 @@
-<launch>
-  <arg name="USBPort" default="/dev/ttyUSB0"/>
-
-
-  <node pkg="robotiq_2f_gripper_control" name="Robotiq2FGripperRtuNode" type="Robotiq2FGripperRtuNode.py" args="$(arg USBPort)" output="screen"/>
-
-  <node pkg="robotiq_2f_gripper_control" name="Robotiq2FGripperSimpleController" type="Robotiq2FGripperSimpleController.py" output="screen"/>
-
-</launch>
