@@ -195,11 +195,26 @@ class MoveGroupPythonIntefaceTutorial(object):
     ## ^^^^^^^^^^^^^^^^^^^^^^^
     ## We can plan a motion for this group to a desired pose for the
     ## end-effector:
+    # initial_pose = geometry_msgs.msg.Pose()
+    # initial_pose = group.get_current_pose().pose
+    # print("Initial position x:", initial_pose.position.x)
+    # print("Initial position x:", initial_pose.position.y)
+    # print("Initial position x:", initial_pose.position.z)
+    # print("Initial orientation x:", initial_pose.orientation.x)
+    # print("Initial orientation x:", initial_pose.orientation.y)
+    # print("Initial orientation x:", initial_pose.orientation.z)
+    # print("Initial orientation x:", initial_pose.orientation.w)
+
     pose_goal = geometry_msgs.msg.Pose()
-    pose_goal.orientation.w = 1.0
-    pose_goal.position.x = 0.4
-    pose_goal.position.y = 0.1
-    pose_goal.position.z = 0.4
+
+    pose_goal.position.x = 0.13
+    pose_goal.position.y = -0.3
+    pose_goal.position.z = 1.6
+
+    pose_goal.orientation.w = 0
+    pose_goal.position.x = 0.38
+    pose_goal.position.y = 0
+    pose_goal.position.z = 0.92
     group.set_pose_target(pose_goal)
 
     ## Now, we call the planner to compute the plan and execute it.
@@ -356,7 +371,9 @@ class MoveGroupPythonIntefaceTutorial(object):
     ## ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     ## First, we will create a box in the planning scene at the location of the left finger:
     box_pose = geometry_msgs.msg.PoseStamped()
-    box_pose.header.frame_id = "gripper_finger1_joint" #"panda_leftfinger"
+    # box_pose.header.frame_id = "gripper_finger1_joint" #"panda_leftfinger"
+    box_pose.header.frame_id = "gripper_finger1_finger_tip_link" #"panda_leftfinger"
+
     box_pose.pose.orientation.w = 1.0
     box_name = "box"
     print("box_pose: ", box_pose)
