@@ -24,6 +24,10 @@
     <origin xyz="0 0 0" rpy="0 0 0"/>
   </xacro:robotiq_85_gripper>
 
+  <!-- Astra camera -->
+  <xacro:include filename="$(find bimur_description)/urdf/camera/astra.xacro"/>
+  <xacro:sensor_astra name="astra" parent="camera_mount" cam_px="0.01" cam_pz="${0.052}" meshes="package://bimur_description/meshes/rgbd" />
+
   <link name="world"/>
 
   <link name="frame">
@@ -90,6 +94,15 @@
     <parent link="frame"/>
     <child link = "base_link"/>
     <origin xyz="0.265 0.635 1.275" rpy="${-45*pi/180} ${180*pi/180}  ${90*pi/180}"/>
+  </joint>
+
+  <!-- astra camera -->
+  <link name="camera_mount"/>
+
+  <joint name="camera_to_frame" type="fixed">
+    <parent link="frame"/>
+    <child link = "camera_mount"/>
+    <origin xyz="0.5 0.53 1.58" rpy="${0} ${0} ${-PI/2}"/>
   </joint>
 
 </robot>

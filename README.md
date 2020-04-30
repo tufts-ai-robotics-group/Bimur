@@ -38,7 +38,7 @@ Launch URDF in Gazebo with specific kinematics_config: <br>
 
 ## Gazebo + MoveIt Rviz:
 UR5 Arm: <br>
-`roslaunch bimur_bringup bimur_right_ur5_arm_gazebo_1_moveit.launch`
+`roslaunch bimur_bringup bimur_right_ur5_arm_gazebo_1_moveit.launch` <br>
 UR5 Arm + Gripper: <br>
 `roslaunch bimur_bringup bimur_right_robot_gazebo_1_moveit.launch`
 
@@ -50,7 +50,8 @@ UR5 Arm + Gripper: <br>
 roslaunch bimur_bringup bimur_right_robot_real_moveit.launch robot_ip:=172.22.22.2 kinematics_config:="$(rospack find bimur_ur_launch)/etc/bimur_right_arm_calibration.yaml" gripper_test:=false
 rosrun bimur_manipulation trajectory_test.py
 ```
-==============================
+
+==============================<br>
 OLD:
 ```
 roslaunch bimur_bringup bimur_right_arm_gazebo.launch
