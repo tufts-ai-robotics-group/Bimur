@@ -11,7 +11,7 @@ Bimur (Bi-manual UR5). This repository is for packages related to UR5 at AIR Lab
 Following GitHub repo. was used (no need to clone them):
 ```
 git clone https://github.com/UniversalRobots/Universal_Robots_ROS_Driver.git
-git checkout 2ee8f2b
+git checkout b466518
 
 git clone -b calibration_devel https://github.com/fmauch/universal_robot.git
 git checkout e5a176c
