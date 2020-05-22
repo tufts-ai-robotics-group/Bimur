@@ -25,18 +25,20 @@ git checkout 66961ec
 
 # Right Robot
 
-## Rviz
+## Simulation
+
+### Rviz
 Launch URDF in Rviz for visualization <br>
 `roslaunch bimur_description bimur_right_robot_rviz.launch`
 
-## Gazebo
+### Gazebo
 Launch URDF in Gazebo with specific joint poses: <br>
 `roslaunch bimur_bringup bimur_right_robot_gazebo_1.launch`
 
 Launch URDF in Gazebo with specific kinematics_config: <br>
 `roslaunch bimur_bringup bimur_right_robot_gazebo_2.launch`
 
-## Gazebo + MoveIt Rviz:
+### Gazebo + MoveIt Rviz:
 UR5 Arm: <br>
 `roslaunch bimur_bringup bimur_right_ur5_arm_gazebo_1_moveit.launch` <br>
 UR5 Arm + Gripper: <br>

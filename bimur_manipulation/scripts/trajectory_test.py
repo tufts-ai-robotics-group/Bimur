@@ -37,7 +37,7 @@ class TrajectoryTest(unittest.TestCase):
         # position_list = [[0.0 for i in range(6)]]
         position_list = [[2.10, -1.09, -0.2, -3.12, 2.65, 0.00]]
         position_list.append([2.17, -1.7, -0.45, -1.55, 2.3, 2.25])
-        position_list.append([2.24, -1.35, -0.8, -1.8, 2.12, 2.5])
+        position_list.append([2.26, -1.33, -0.78, -1.84, 2.13, 2.48])
         duration_list = [12.0, 20.0, 30.0]
 
         for i, position in enumerate(position_list):
