@@ -3,10 +3,42 @@ Bimur (Bi-manual UR5). This repository is for packages related to UR5 at AIR Lab
 
 <img src="pics/Bimur.png" align="middle">
 
-# Install:
+# Installation
+
 `git clone https://github.com/tufts-ai-robotics-group/Bimur.git`
 
-## Submodules
+## Requirements
+
+1. Ubuntu 16.04
+2. ROS Kinetic
+3. Gazebo 7.x
+
+## ROS Packages
+
+```
+sudo apt-get install ros-kinetic-control-toolbox
+sudo apt-get install ros-kinetic-controller-interface
+sudo apt-get install ros-kinetic-controller-manager-msgs
+sudo apt-get install ros-kinetic-controller-manager
+sudo apt-get install ros-kinetic-effort-controllers
+sudo apt-get install ros-kinetic-force-torque-sensor-controller
+sudo apt-get install ros-kinetic-gazebo-ros-control
+sudo apt-get install ros-kinetic-industrial-robot-status-interface
+sudo apt-get install ros-kinetic-joint-state-controller
+sudo apt-get install ros-kinetic-joint-state-publisher-gui
+sudo apt-get install ros-kinetic-joint-trajectory-controller
+sudo apt-get install ros-kinetic-moveit
+sudo apt-get install ros-kinetic-moveit-core
+sudo apt-get install ros-kinetic-moveit-kinematics
+sudo apt-get install ros-kinetic-moveit-ros-visualization
+sudo apt-get install ros-kinetic-position-controllers
+sudo apt-get install ros-kinetic-rqt-joint-trajectory-controller
+sudo apt-get install ros-kinetic-socketcan-interface
+sudo apt-get install ros-kinetic-soem
+sudo apt-get install ros-kinetic-ur-client-library
+sudo apt-get install ros-kinetic-velocity-controllers
+
+```
 
 Following GitHub repo. was used (no need to clone them):
 ```
@@ -45,17 +77,13 @@ UR5 Arm + Gripper: <br>
 `roslaunch bimur_bringup bimur_right_robot_gazebo_1_moveit.launch`
 
 ## Real Robot
+
+In the teach pendant on the robot, select Program Robot > Load Program > Open ur_driver.upr > Press play <br>
+
 `roslaunch bimur_bringup bimur_right_robot_real_moveit.launch robot_ip:=172.22.22.2 kinematics_config:="$(rospack find bimur_ur_launch)/etc/bimur_right_arm_calibration.yaml" gripper_test:=true`
 
 ### Manipulation:
 ```
 roslaunch bimur_bringup bimur_right_robot_real_moveit.launch robot_ip:=172.22.22.2 kinematics_config:="$(rospack find bimur_ur_launch)/etc/bimur_right_arm_calibration.yaml" gripper_test:=false
 rosrun bimur_manipulation trajectory_test.py
-```
-
-==============================<br>
-OLD:
-```
-roslaunch bimur_bringup bimur_right_arm_gazebo.launch
-rosrun bimur_manipulation execute_trajectory.py
 ```
