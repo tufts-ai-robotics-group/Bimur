@@ -76,6 +76,13 @@ UR5 Arm: <br>
 UR5 Arm + Gripper: <br>
 `roslaunch bimur_bringup bimur_right_robot_gazebo_1_moveit.launch`
 
+### Manipulation:
+```
+roslaunch bimur_bringup bimur_right_robot_gazebo_1_moveit.launch
+rosrun bimur_manipulation gazebo_moveit_example_1.py
+rosrun bimur_manipulation gazebo_moveit_example_2.py
+```
+
 ## Real Robot
 
 In the teach pendant on the robot, select Program Robot > Load Program > Open ur_driver.upr > Press play <br>
@@ -84,6 +91,7 @@ In the teach pendant on the robot, select Program Robot > Load Program > Open ur
 
 ### Manipulation:
 ```
-roslaunch bimur_bringup bimur_right_robot_real_moveit.launch robot_ip:=172.22.22.2 kinematics_config:="$(rospack find bimur_ur_launch)/etc/bimur_right_arm_calibration.yaml" gripper_test:=false
-rosrun bimur_manipulation trajectory_test.py
+roslaunch bimur_bringup bimur_right_robot_real_moveit.launch robot_ip:=172.22.22.2
+rosrun bimur_manipulation real_actionclient_example.py
+rosrun bimur_manipulation real_moveit_example.py
 ```

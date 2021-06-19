@@ -6,10 +6,10 @@
   -->
 
   <arg name="real_robot" default="true"/>
-  <arg name="gripper_test" default="true"/>
+  <arg name="gripper_test" default="false"/>
   <arg name="debug" default="false"/>
   <arg name="robot_ip" doc="IP address by which the robot can be reached."/>
-  <arg name="kinematics_config" doc="Kinematics config file used for calibration correction. This will be used to verify the robot's calibration is matching the robot_description."/>
+  <arg name="kinematics_config" default="$(find bimur_ur_launch)/etc/bimur_right_arm_calibration.yaml" doc="Kinematics config file used for calibration correction. This will be used to verify the robot's calibration is matching the robot_description."/>
   <arg name="robot_description_file" default="$(find bimur_description)/launch/bimur_right_robot_upload.launch" doc="Robot description launch file."/>
 
   <!-- ur5 driver -->
