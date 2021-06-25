@@ -16,6 +16,7 @@ Bimur (Bi-manual UR5). This repository is for packages related to UR5 at AIR Lab
 ## ROS Packages
 
 ```
+sudo apt-get install ros-kinetic-astra-launch
 sudo apt-get install ros-kinetic-control-toolbox
 sudo apt-get install ros-kinetic-controller-interface
 sudo apt-get install ros-kinetic-controller-manager-msgs
@@ -95,3 +96,8 @@ roslaunch bimur_bringup bimur_right_robot_real_moveit.launch robot_ip:=172.22.22
 rosrun bimur_manipulation real_actionclient_example.py
 rosrun bimur_manipulation real_moveit_example.py
 ```
+
+### Start astra camera
+- Make sure the camera is plugged into the computer vis USB <br>
+- Install camera driver: https://github.com/orbbec/ros_astra_camera <br>
+`roslaunch astra_launch astra.launch`

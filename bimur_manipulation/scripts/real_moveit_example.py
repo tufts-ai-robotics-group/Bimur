@@ -28,7 +28,7 @@ if __name__ == "__main__":
     roslaunch bimur_bringup bimur_right_robot_real_moveit.launch robot_ip:=172.22.22.2
     """
 
-    rospy.init_node('execute_trajectory', anonymous=True)
+    rospy.init_node('real_moveit_example', anonymous=True)
 
     robot = moveit_commander.RobotCommander()
     arm_group = moveit_commander.MoveGroupCommander("manipulator")  # Creating moveit client to control arm
