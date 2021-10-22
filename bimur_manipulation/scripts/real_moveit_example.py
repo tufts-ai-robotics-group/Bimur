@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# Gyan Tatiya
+
 import rospy
 import moveit_commander
 import tf
@@ -96,7 +98,9 @@ if __name__ == "__main__":
     rospy.sleep(1)
 
     # How to go to a joint positions using moveit:
-    arm_group.set_joint_value_target([-0.78, -1.33, 2.26, -1.84, 2.13, 2.48])
+    # [shoulder_pan_joint, shoulder_lift_joint, elbow_joint, wrist_1_joint, wrist_2_joint, wrist_3_joint]
+    point = [-0.78, -1.33, 2.26, -1.84, 2.13, 2.48]
+    arm_group.set_joint_value_target(point)
     arm_group.go(wait=True)
 
     # Open gripper

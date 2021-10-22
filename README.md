@@ -101,3 +101,12 @@ rosrun bimur_manipulation real_moveit_example.py
 - Make sure the camera is plugged into the computer vis USB <br>
 - Install camera driver: https://github.com/orbbec/ros_astra_camera <br>
 `roslaunch astra_launch astra.launch`
+
+### Start microphone
+- Make sure the microphone is plugged into the computer vis USB <br>
+- Turn the volume control on Blue Icicle clockwise to all the way up <br>
+- Check audio device name: `arecord -l`, use device name in "device" below (e.g. `hw:2,0`)<br>
+`roslaunch bimur_bringup capture_wave.launch device:=hw:2,0 channels:=2 sample_rate:=44100`
+
+### To perform 7 behaviors (Look, grasp, pick, hold, shake, lower, drop, push)
+`rosrun bimur_manipulation real_behaviors.py`

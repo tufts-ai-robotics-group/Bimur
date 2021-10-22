@@ -1,0 +1,21 @@
+<launch>
+	<!-- `arecord -l` will show available input devices, use the card number as
+      the first number and the subdevice number as the second in a string
+      like hw:1,0
+	  roslaunch bimur_bringup capture_wave.launch device:=hw:1,0 channels:=2 sample_rate:=44100
+	-->
+
+  <arg name="device" default="" />
+  <arg name="channels" default="2"/>
+  <arg name="sample_rate" default="44100"/>
+
+  <!-- publish audio data as wav format -->
+  <node name="audio_capture" pkg="audio_capture" type="audio_capture" output="screen">
+    <param name="format" value="wave" />
+    <param name="channels" value="$(arg channels)" />
+    <param name="depth" value="16" />
+    <param name="sample_rate" value="$(arg sample_rate)" />
+    <param name="device" value="$(arg device)" />
+  </node>
+
+</launch>
