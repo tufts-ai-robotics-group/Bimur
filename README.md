@@ -108,5 +108,8 @@ rosrun bimur_manipulation real_moveit_example.py
 - Check audio device name: `arecord -l`, use device name in "device" below (e.g. `hw:2,0`)<br>
 `roslaunch bimur_bringup capture_wave.launch device:=hw:2,0 channels:=2 sample_rate:=44100`
 
-### To perform 7 behaviors (Look, grasp, pick, hold, shake, lower, drop, push)
+## To perform 7 behaviors (Look, grasp, pick, hold, shake, lower, drop)
 `rosrun bimur_manipulation real_behaviors.py`
+
+## To perform push behavior (Arguments for -pt: slow, fast)
+`rosrun bimur_manipulation real_behaviors.py -pt slow`

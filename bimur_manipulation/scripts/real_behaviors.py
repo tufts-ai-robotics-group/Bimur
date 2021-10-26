@@ -2,9 +2,12 @@
 
 # Gyan Tatiya
 
+import argparse
 import os
+import shutil
 import subprocess
 import time
+from copy import copy
 from datetime import datetime
 
 import rospy
@@ -26,9 +29,12 @@ from geometry_msgs.msg import (
     Quaternion,
 )
 
+import actionlib
+from control_msgs.msg import FollowJointTrajectoryAction, FollowJointTrajectoryGoal
+from trajectory_msgs.msg import JointTrajectoryPoint
+
 
 def start_rosbag_recording(path, filename, topic_list_, num=None):
-
     rospy.loginfo(rospy.get_name() + ' start rosbag recording: ' + str(topic_list_))
 
     if not os.path.exists(path):
@@ -46,7 +52,6 @@ def start_rosbag_recording(path, filename, topic_list_, num=None):
 
 
 def stop_rosbag_recording():
-
     s = "/record"
     list_cmd = subprocess.Popen("rosnode list", shell=True, stdout=subprocess.PIPE)
     list_output = list_cmd.stdout.read()
@@ -57,6 +62,79 @@ def stop_rosbag_recording():
             os.system("rosnode kill " + str)
 
     rospy.loginfo(rospy.get_name() + ' stop rosbag recording')
+
+
+def find_trial_no(object_name_, path):
+
+    behaviors_trial_count = {}
+    trial_count = 0
+    for root, subdirs, files in os.walk(path):
+        root_list = root.split(os.sep)
+        for filename in files:
+            filename, fileext = os.path.splitext(filename)
+
+            if fileext == '.bag' and root_list[-2].split('_')[1] == object_name_ and filename.endswith('sensor_data'):
+                behavior = filename.split('_')[1]
+                behaviors_trial_count.setdefault(behavior, 0)
+                behaviors_trial_count[behavior] += 1
+            else:
+                continue
+
+    behaviors_trial_count_list = sorted(behaviors_trial_count.items(), key=lambda x: x[1])
+
+    if behaviors_trial_count_list:
+        print("\nBehaviors: Trial Count")
+        for behavior, trial_count in behaviors_trial_count_list:
+            print('{0}: {1}'.format(behavior, trial_count))
+
+        behavior, trial_count = sorted(behaviors_trial_count.items(), key=lambda x: x[1])[0]
+
+    return trial_count
+
+
+class Trajectory(object):
+
+    def __init__(self):
+        self._client = actionlib.SimpleActionClient('/scaled_pos_traj_controller/follow_joint_trajectory',
+                                                    FollowJointTrajectoryAction)
+        self._goal = FollowJointTrajectoryGoal()
+        try:
+            self._client.wait_for_server(timeout=rospy.Duration(10.0))
+        except rospy.exceptions.ROSException as err:
+            rospy.logerr("Timed out waiting for Joint Trajectory"
+                         " Action Server to connect. Start the action server"
+                         " before running example.")
+            rospy.signal_shutdown("Timed out waiting for Action Server")
+        self.clear()
+
+    def add_point(self, positions, time_):
+        point = JointTrajectoryPoint()
+        point.positions = copy(positions)
+        point.velocities = [0.0] * len(positions)
+        point.accelerations = [0.0] * len(positions)
+        point.time_from_start = rospy.Duration(time_)
+
+        self._goal.trajectory.points.append(point)
+        self._goal.goal_time_tolerance = rospy.Duration(0.0)
+
+    def start(self):
+        self._goal.trajectory.header.stamp = rospy.Time.now()
+        self._client.send_goal(self._goal)
+
+    def stop(self):
+        self._client.cancel_goal()
+
+    def wait(self, timeout=15.0):
+        self._client.wait_for_result(timeout=rospy.Duration(timeout))
+
+    def result(self):
+        return self._client.get_result()
+
+    def clear(self):
+        self._goal = FollowJointTrajectoryGoal()
+        self._goal.goal_time_tolerance = rospy.Time(0.1)
+        self._goal.trajectory.joint_names = ["shoulder_pan_joint", "shoulder_lift_joint", "elbow_joint", "wrist_1_joint",
+                                             "wrist_2_joint", "wrist_3_joint"]
 
 
 class Behaviors(object):
@@ -88,6 +166,12 @@ class Behaviors(object):
         self.arm_group = moveit_commander.MoveGroupCommander("manipulator")  # Creating moveit client to control arm
         self.gripper_pub = rospy.Publisher('/gripper/cmd', GripperCmd, queue_size=1)
 
+        self.arm_client = Trajectory()
+        rospy.on_shutdown(self.arm_client.stop)
+
+        self.arm_group.set_max_velocity_scaling_factor(1)
+        self.arm_group.set_max_acceleration_scaling_factor(1)
+
         self.initialise_robot()
 
     def open_gripper(self):
@@ -112,6 +196,14 @@ class Behaviors(object):
         self.arm_group.set_named_target('ready')
         self.arm_group.go(wait=True)
 
+    def start_rosbag_recording(self, behavior):
+
+        bag_filename = '{0}_{1}_pointcloud'.format(behavior, datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
+        p = start_rosbag_recording(self.sensor_data_path, bag_filename, topic_list_=[self.point_cloud_topic], num=5)
+
+        bag_filename = '{0}_{1}_sensor_data'.format(behavior, datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
+        start_rosbag_recording(self.sensor_data_path, bag_filename, self.topic_list, num=None)
+
     def look(self):
 
         print("\nLooking...")
@@ -134,11 +226,7 @@ class Behaviors(object):
 
         self.initialise_robot()
 
-        bag_filename = '{0}_{1}_pointcloud'.format(behavior, datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
-        p = start_rosbag_recording(self.sensor_data_path, bag_filename, topic_list_=[self.point_cloud_topic], num=5)
-
-        bag_filename = '{0}_{1}_sensor_data'.format(behavior, datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
-        start_rosbag_recording(self.sensor_data_path, bag_filename, self.topic_list, num=None)
+        self.start_rosbag_recording(behavior)
         time.sleep(2.0)
 
         point = [-0.90, -0.98, 2.10, -2.01, 2.02, 2.59]
@@ -154,11 +242,7 @@ class Behaviors(object):
         print("\nPicking...")
         behavior = "ur5_3-pick"
 
-        bag_filename = '{0}_{1}_pointcloud'.format(behavior, datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
-        p = start_rosbag_recording(self.sensor_data_path, bag_filename, topic_list_=[self.point_cloud_topic], num=5)
-
-        bag_filename = '{0}_{1}_sensor_data'.format(behavior, datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
-        start_rosbag_recording(self.sensor_data_path, bag_filename, self.topic_list, num=None)
+        self.start_rosbag_recording(behavior)
         time.sleep(2.0)
 
         self.close_gripper()
@@ -177,11 +261,7 @@ class Behaviors(object):
         self.arm_group.set_joint_value_target(point)
         self.arm_group.go(wait=True)
 
-        bag_filename = '{0}_{1}_pointcloud'.format(behavior, datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
-        p = start_rosbag_recording(self.sensor_data_path, bag_filename, topic_list_=[self.point_cloud_topic], num=5)
-
-        bag_filename = '{0}_{1}_sensor_data'.format(behavior, datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
-        start_rosbag_recording(self.sensor_data_path, bag_filename, self.topic_list, num=None)
+        self.start_rosbag_recording(behavior)
         time.sleep(2.0)
 
         stop_rosbag_recording()
@@ -191,11 +271,7 @@ class Behaviors(object):
         print("\nShaking...")
         behavior = "ur5_5-shake"
 
-        bag_filename = '{0}_{1}_pointcloud'.format(behavior, datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
-        p = start_rosbag_recording(self.sensor_data_path, bag_filename, topic_list_=[self.point_cloud_topic], num=5)
-
-        bag_filename = '{0}_{1}_sensor_data'.format(behavior, datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
-        start_rosbag_recording(self.sensor_data_path, bag_filename, self.topic_list, num=None)
+        self.start_rosbag_recording(behavior)
 
         for _ in range(3):
             # point = [-1.16, -1.85, 2.44, -2.86, 4.45, -1.65]  # Too far from camera
@@ -220,11 +296,7 @@ class Behaviors(object):
         self.arm_group.set_joint_value_target(point)
         self.arm_group.go(wait=True)
 
-        bag_filename = '{0}_{1}_pointcloud'.format(behavior, datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
-        p = start_rosbag_recording(self.sensor_data_path, bag_filename, topic_list_=[self.point_cloud_topic], num=5)
-
-        bag_filename = '{0}_{1}_sensor_data'.format(behavior, datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
-        start_rosbag_recording(self.sensor_data_path, bag_filename, self.topic_list, num=None)
+        self.start_rosbag_recording(behavior)
         time.sleep(2.0)
 
         # point = [-0.83, -0.84, 2.30, -2.34, -4.19, 2.62]
@@ -243,11 +315,7 @@ class Behaviors(object):
         print("\nDropping...")
         behavior = "ur5_7-drop"
 
-        bag_filename = '{0}_{1}_pointcloud'.format(behavior, datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
-        p = start_rosbag_recording(self.sensor_data_path, bag_filename, topic_list_=[self.point_cloud_topic], num=5)
-
-        bag_filename = '{0}_{1}_sensor_data'.format(behavior, datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
-        start_rosbag_recording(self.sensor_data_path, bag_filename, self.topic_list, num=None)
+        self.start_rosbag_recording(behavior)
 
         time.sleep(3.0)
         self.open_gripper()
@@ -255,10 +323,14 @@ class Behaviors(object):
 
         stop_rosbag_recording()
 
-    def push(self):
+    def push(self, push_type):
 
         print("\nPushing...")
-        behavior = "ur5_8-push"
+
+        if push_type == "slow":
+            behavior = "ur5_8-push-slow"
+        else:
+            behavior = "ur5_8-push-fast"
 
         msg = GripperCmd(position=0.02, speed=1, force=100.0)
         rospy.sleep(1)
@@ -269,23 +341,25 @@ class Behaviors(object):
         self.arm_group.set_joint_value_target(point)
         self.arm_group.go(wait=True)
 
-        bag_filename = '{0}_{1}_pointcloud'.format(behavior, datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
-        p = start_rosbag_recording(self.sensor_data_path, bag_filename, topic_list_=[self.point_cloud_topic], num=5)
-
-        bag_filename = '{0}_{1}_sensor_data'.format(behavior, datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
-        start_rosbag_recording(self.sensor_data_path, bag_filename, self.topic_list, num=None)
+        self.start_rosbag_recording(behavior)
         time.sleep(2.0)
 
-        point = [-0.99, -0.83, 2.01, -2.04, 1.94, 2.77]
-        self.arm_group.set_joint_value_target(point)
-        self.arm_group.go(wait=True)
-        time.sleep(2.0)
+        if push_type == "slow":
+            point = [-0.99, -0.83, 2.01, -2.04, 1.94, 2.77]
+            self.arm_group.set_joint_value_target(point)
+            self.arm_group.go(wait=True)
+            time.sleep(2.0)
+        else:
+            point = [-0.99, -0.83, 2.01, -2.04, 1.94, 2.77]
+            self.arm_client.add_point(point, 0.3)
+            self.arm_client.start()
+            self.arm_client.wait(0)
+            self.arm_client.clear()
 
         stop_rosbag_recording()
 
 
 if __name__ == "__main__":
-
     """
     This script performs look, grasp, pick, hold, shake, lower, drop, push behaviors.
     And saves sensory data:
@@ -293,27 +367,90 @@ if __name__ == "__main__":
         /camera/depth_registered/points
     """
 
+    arg_fmt = argparse.RawDescriptionHelpFormatter
+    parser = argparse.ArgumentParser(formatter_class=arg_fmt)
+    required = parser.add_argument_group('required arguments')
+    required.add_argument('-pt', '--push_type', required=False, choices=['slow', 'fast'],
+                          help='Type of Push: Slow or fast')
+    args = parser.parse_args(rospy.myargv()[1:])
+
+    objects_id = {'empty-22g': 0, 'button-50g': 1, 'wheat-100g': 2, 'marble-150g': 3}
+
+    object_id = object_name = ""
+    while object_id not in objects_id.values():
+        print("\nObject Names: Object IDs")
+        for obj, obj_id in sorted(objects_id.items(), key=lambda x: x[1]):
+            print('{0}: {1}'.format(obj, obj_id))
+
+        try:
+            object_id = int(raw_input("Enter object ID: "))
+        except ValueError:
+            print("Sorry, I didn't understand that\n")
+            continue
+        else:
+            if object_id not in objects_id.values():
+                print("Object ID you entered is not valid\n")
+            else:
+                object_name = list(objects_id.keys())[list(objects_id.values()).index(object_id)]
+                break
+
     sensor_data_path = r"/media/gyan/My Passport/UR5_Dataset_Temp/"
 
-    object_name = 'obj1'
-    trial_no = 0
+    trial_no = find_trial_no(object_name, sensor_data_path)
+
+    ans = ""
+    while ans != 'y':
+        try:
+            ans = raw_input("Is it trial " + str(trial_no) + " of " + object_name + "? (Enter 'y' or the trial no.): ")
+            ans = ans.lower()
+            if ans != 'y':
+                trial_no = int(ans)
+        except ValueError:
+            print("Sorry, I didn't understand that\n")
+            continue
+        else:
+            break
+
+    print("Recording trial {} of object {} (ID: {})".format(trial_no, object_name, object_id))
+
     sensor_data_path += os.sep + "ur5_" + object_name + os.sep + "trial-" + str(trial_no) + "_" + \
                         datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 
     b = Behaviors(sensor_data_path)
-    b.initialise_robot()
 
-    b.look()
-    b.grasp()
-    b.pick()
-    b.hold()
-    b.shake()
-    b.lower()
-    b.drop()
-    b.push()
+    if args.push_type:
+        b.push(args.push_type)
+    else:
+        b.look()
+        b.grasp()
+        b.pick()
+        b.hold()
+        b.shake()
+        b.lower()
+        b.drop()
+
+    time.sleep(2.0)
+
+    ans = ""
+    while ans not in ['y', 'n']:
+        try:
+            ans = raw_input("Do you want to save the data of trail " + str(trial_no) + " of " + object_name + "? (y/n): ")
+        except ValueError:
+            print("Sorry, I didn't understand that\n")
+            continue
+        else:
+            ans = ans.lower()
+            if ans not in ['y', 'n']:
+                print("Answer you entered is not valid\n")
+            else:
+                if ans == 'n':
+                    print("DELETING: ", sensor_data_path)
+                    shutil.rmtree(sensor_data_path)
+                break
+
+    print("Exiting - Joint Trajectory Action Complete!")
 
     """
     TODO:
     
-    Fast push
     """
