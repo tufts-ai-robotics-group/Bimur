@@ -17,6 +17,7 @@ Bimur (Bi-manual UR5). This repository is for packages related to UR5 at AIR Lab
 
 ```
 sudo apt-get install ros-kinetic-astra-launch
+sudo apt-get install ros-kinetic-catkin-virtualenv
 sudo apt-get install ros-kinetic-control-toolbox
 sudo apt-get install ros-kinetic-controller-interface
 sudo apt-get install ros-kinetic-controller-manager-msgs
@@ -36,6 +37,7 @@ sudo apt-get install ros-kinetic-position-controllers
 sudo apt-get install ros-kinetic-rqt-joint-trajectory-controller
 sudo apt-get install ros-kinetic-socketcan-interface
 sudo apt-get install ros-kinetic-soem
+sudo apt-get install ros-kinetic-speech-recognition-msgs
 sudo apt-get install ros-kinetic-ur-client-library
 sudo apt-get install ros-kinetic-velocity-controllers
 
@@ -103,10 +105,10 @@ rosrun bimur_manipulation real_moveit_example.py
 `roslaunch astra_launch astra.launch`
 
 ### Start microphone
-- Make sure the microphone is plugged into the computer vis USB <br>
-- Turn the volume control on Blue Icicle clockwise to all the way up <br>
-- Check audio device name: `arecord -l`, use device name in "device" below (e.g. `hw:2,0`)<br>
-`roslaunch bimur_bringup capture_wave.launch device:=hw:2,0 channels:=2 sample_rate:=44100`
+- Make sure the ReSpeaker Microphone Array is plugged into the computer vis USB <br>
+- Check audio device name: `arecord -l` <br>
+- Install microphone driver: https://github.com/furushchev/respeaker_ros <br>
+`roslaunch respeaker_ros respeaker.launch`
 
 ## To perform 7 behaviors (Look, grasp, pick, hold, shake, lower, drop)
 `rosrun bimur_manipulation real_behaviors.py`

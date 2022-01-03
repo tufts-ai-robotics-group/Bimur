@@ -47,8 +47,8 @@ def extract_audio_from_bag(bag_, topic_, output_dir_, topic_name_):
         sensor_msgs.append(msg.data)
 
     # format = 8  # pyaudio.paInt16
-    channels = 2  # 1, 2
-    rate = 44100  # 16000, 44100
+    channels = 1  # 1, 2
+    rate = 16000  # 16000, 44100
 
     wf = wave.open(output_dir_ + os.sep + topic_name_ + '.wav', 'wb')
     wf.setnchannels(channels)
@@ -70,8 +70,8 @@ def main():
     """Extract files from rosbag
     """
 
-    sensor_data_path = r"/media/gyan/My Passport/UR5_Dataset_Temp/"
-    output_path = r"/media/gyan/My Passport/UR5_Dataset_Temp_Extrated/"
+    sensor_data_path = r"/media/gyan/My Passport/UR5_Dataset/1_Raw/"
+    output_path = r"/media/gyan/My Passport/UR5_Dataset/2_Extracted/"
 
     camera_topics_to_make_video = ['/camera/rgb/image_raw']
 

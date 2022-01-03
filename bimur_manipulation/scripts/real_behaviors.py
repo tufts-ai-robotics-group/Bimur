@@ -64,6 +64,33 @@ def stop_rosbag_recording():
     rospy.loginfo(rospy.get_name() + ' stop rosbag recording')
 
 
+def get_label_from_user(labels):
+
+    labels_id = {}
+    for i, label in enumerate(sorted(labels)):
+        labels_id[label] = i
+
+    id_ = label = ""
+    while id_ not in labels_id.values():
+        print("\nLabels: IDs")
+        for lab, lab_id in sorted(labels_id.items(), key=lambda x: x[1]):
+            print('{0}: {1}'.format(lab, lab_id))
+
+        try:
+            id_ = int(raw_input("Enter ID: "))
+        except ValueError:
+            print("Sorry, I didn't understand that\n")
+            continue
+        else:
+            if id_ not in labels_id.values():
+                print("ID you entered is not valid\n")
+            else:
+                label = list(labels_id.keys())[list(labels_id.values()).index(id_)]
+                break
+
+    return label
+
+
 def find_trial_no(object_name_, path):
 
     behaviors_trial_count = {}
@@ -374,27 +401,20 @@ if __name__ == "__main__":
                           help='Type of Push: Slow or fast')
     args = parser.parse_args(rospy.myargv()[1:])
 
-    objects_id = {'empty-22g': 0, 'button-50g': 1, 'wheat-100g': 2, 'marble-150g': 3}
+    colors = ['white', 'red', 'blue', 'green', 'yellow']
+    weight_in_grams = ['0g', '50g', '100g', '150g']
+    contents = ['rice', 'pasta', 'nutsandbolts', 'marbles', 'dices', 'buttons']
 
-    object_id = object_name = ""
-    while object_id not in objects_id.values():
-        print("\nObject Names: Object IDs")
-        for obj, obj_id in sorted(objects_id.items(), key=lambda x: x[1]):
-            print('{0}: {1}'.format(obj, obj_id))
+    color = get_label_from_user(colors)
+    weight = get_label_from_user(weight_in_grams)
+    if weight == '0g':
+        weight = '22g'
+        content = 'empty'
+    else:
+        content = get_label_from_user(contents)
+    object_name = '-'.join([color, content, weight])
 
-        try:
-            object_id = int(raw_input("Enter object ID: "))
-        except ValueError:
-            print("Sorry, I didn't understand that\n")
-            continue
-        else:
-            if object_id not in objects_id.values():
-                print("Object ID you entered is not valid\n")
-            else:
-                object_name = list(objects_id.keys())[list(objects_id.values()).index(object_id)]
-                break
-
-    sensor_data_path = r"/media/gyan/My Passport/UR5_Dataset_Temp/"
+    sensor_data_path = r"/media/gyan/My Passport/UR5_Dataset/1_Raw/"
 
     trial_no = find_trial_no(object_name, sensor_data_path)
 
@@ -411,7 +431,7 @@ if __name__ == "__main__":
         else:
             break
 
-    print("Recording trial {} of object {} (ID: {})".format(trial_no, object_name, object_id))
+    print("Recording trial {} of object {}".format(trial_no, object_name))
 
     sensor_data_path += os.sep + "ur5_" + object_name + os.sep + "trial-" + str(trial_no) + "_" + \
                         datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
