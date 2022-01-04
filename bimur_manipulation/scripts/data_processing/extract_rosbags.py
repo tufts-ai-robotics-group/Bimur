@@ -116,6 +116,9 @@ def main():
                 print("output_dir: ", output_dir)
                 if not os.path.exists(output_dir):
                     os.makedirs(output_dir)
+                else:
+                    print(output_dir + " already exists, so skipping ...\n")
+                    continue
 
                 if topic == '/cameras/left_hand_camera/image' or topic == '/camera/rgb/image_raw' \
                         or topic == '/camera/depth/image_raw':
