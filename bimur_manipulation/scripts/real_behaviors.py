@@ -43,6 +43,7 @@ def start_rosbag_recording(path, filename, topic_list_, num=None):
     rosbag_record_cmd = 'rosbag record -O ' + filename + ' '
     for topic_name in topic_list_:
         rosbag_record_cmd += topic_name + ' '
+    rosbag_record_cmd += '-b 0 '  # Buffer size 0 = infinite
     if num:
         rosbag_record_cmd += '-l ' + str(num)
 
@@ -67,6 +68,9 @@ def stop_rosbag_recording():
 def get_label_from_user(labels):
 
     labels_id = {}
+    if labels == 0:
+        print("\nWeights in grams")
+        labels = [int(lab[:-1]) for lab in labels]
     for i, label in enumerate(sorted(labels)):
         labels_id[label] = i
 
@@ -91,11 +95,11 @@ def get_label_from_user(labels):
     return label
 
 
-def find_trial_no(object_name_, path):
+def find_trial_no(object_name_, path, robot):
 
     behaviors_trial_count = {}
     trial_count = 0
-    for root, subdirs, files in os.walk(path):
+    for root, subdirs, files in os.walk(path + os.sep + robot + "_" + object_name):
         root_list = root.split(os.sep)
         for filename in files:
             filename, fileext = os.path.splitext(filename)
@@ -165,13 +169,14 @@ class Trajectory(object):
 
 
 class Behaviors(object):
-    def __init__(self, sensor_data_path_):
+    def __init__(self, sensor_data_path_, robot):
 
         print("Initializing node... ")
         rospy.init_node('real_behaviors', anonymous=True)
         print("Running. Ctrl-c to quit")
 
         self.sensor_data_path = sensor_data_path_
+        self.robot = robot
         if not os.path.exists(self.sensor_data_path):
             os.makedirs(self.sensor_data_path)
 
@@ -234,10 +239,10 @@ class Behaviors(object):
     def look(self):
 
         print("\nLooking...")
-        behavior = "ur5_1-look"
+        behavior = self.robot + "_1-look"
         num_msg_to_record = 5
 
-        self.initialise_robot()
+        # self.initialise_robot()
 
         bag_filename = '{0}_{1}_sensor_data'.format(behavior, datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
         topic_list = ['/camera/depth_registered/points', '/camera/depth/image_raw', '/camera/rgb/image_raw']
@@ -248,10 +253,10 @@ class Behaviors(object):
     def grasp(self):
 
         print("\nGrasping...")
-        behavior = "ur5_2-grasp"
+        behavior = self.robot + "_2-grasp"
         self.open_gripper()
 
-        self.initialise_robot()
+        # self.initialise_robot()
 
         self.start_rosbag_recording(behavior)
         time.sleep(2.0)
@@ -267,7 +272,7 @@ class Behaviors(object):
     def pick(self):
 
         print("\nPicking...")
-        behavior = "ur5_3-pick"
+        behavior = self.robot + "_3-pick"
 
         self.start_rosbag_recording(behavior)
         time.sleep(2.0)
@@ -282,7 +287,7 @@ class Behaviors(object):
     def hold(self):
 
         print("\nHolding...")
-        behavior = "ur5_4-hold"
+        behavior = self.robot + "_4-hold"
 
         point = [-0.63, -1.49, 2.23, -2.76, 4.09, 1.86]
         self.arm_group.set_joint_value_target(point)
@@ -296,7 +301,7 @@ class Behaviors(object):
     def shake(self):
 
         print("\nShaking...")
-        behavior = "ur5_5-shake"
+        behavior = self.robot + "_5-shake"
 
         self.start_rosbag_recording(behavior)
 
@@ -315,7 +320,7 @@ class Behaviors(object):
     def lower(self):
 
         print("\nLowering...")
-        behavior = "ur5_6-lower"
+        behavior = self.robot + "_6-lower"
 
         # point = [-0.48, -0.25, 2.23, -3.08, -4.00, 2.24]
         point = [-0.63, -0.49, 2.29, -2.82, 2.18, 3.91]
@@ -340,7 +345,7 @@ class Behaviors(object):
     def drop(self):
 
         print("\nDropping...")
-        behavior = "ur5_7-drop"
+        behavior = self.robot + "_7-drop"
 
         self.start_rosbag_recording(behavior)
 
@@ -355,9 +360,9 @@ class Behaviors(object):
         print("\nPushing...")
 
         if push_type == "slow":
-            behavior = "ur5_8-push-slow"
+            behavior = self.robot + "_8-push-slow"
         else:
-            behavior = "ur5_8-push-fast"
+            behavior = self.robot + "_8-push-fast"
 
         msg = GripperCmd(position=0.02, speed=1, force=100.0)
         rospy.sleep(1)
@@ -401,22 +406,23 @@ if __name__ == "__main__":
                           help='Type of Push: Slow or fast')
     args = parser.parse_args(rospy.myargv()[1:])
 
+    robot_name = 'ur5'
     colors = ['white', 'red', 'blue', 'green', 'yellow']
-    weight_in_grams = ['0g', '50g', '100g', '150g']
+    weight_in_grams = [0, 50, 100, 150]
     contents = ['rice', 'pasta', 'nutsandbolts', 'marbles', 'dices', 'buttons']
 
     color = get_label_from_user(colors)
     weight = get_label_from_user(weight_in_grams)
-    if weight == '0g':
-        weight = '22g'
+    if weight == 0:
+        weight = 22
         content = 'empty'
     else:
         content = get_label_from_user(contents)
-    object_name = '-'.join([color, content, weight])
+    object_name = '-'.join([color, content, str(weight)+'g'])
 
-    sensor_data_path = r"/media/gyan/My Passport/UR5_Dataset/1_Raw/"
+    sensor_data_path = r"/media/gyan/Seagate Expansion Drive/UR5_Dataset/1_Raw/"
 
-    trial_no = find_trial_no(object_name, sensor_data_path)
+    trial_no = find_trial_no(object_name, sensor_data_path, robot_name)
 
     ans = ""
     while ans != 'y':
@@ -433,10 +439,10 @@ if __name__ == "__main__":
 
     print("Recording trial {} of object {}".format(trial_no, object_name))
 
-    sensor_data_path += os.sep + "ur5_" + object_name + os.sep + "trial-" + str(trial_no) + "_" + \
+    sensor_data_path += os.sep + robot_name + "_" + object_name + os.sep + "trial-" + str(trial_no) + "_" + \
                         datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 
-    b = Behaviors(sensor_data_path)
+    b = Behaviors(sensor_data_path, robot_name)
 
     if args.push_type:
         b.push(args.push_type)
@@ -449,6 +455,7 @@ if __name__ == "__main__":
         b.lower()
         b.drop()
 
+    b.initialise_robot()
     time.sleep(2.0)
 
     ans = ""
@@ -467,6 +474,22 @@ if __name__ == "__main__":
                     print("DELETING: ", sensor_data_path)
                     shutil.rmtree(sensor_data_path)
                 break
+
+    # Wait until bag files are written
+    while True:
+        active_bag_found = False
+        for root, subdirs, files in os.walk(sensor_data_path):
+            for filename in files:
+                filename, fileext = os.path.splitext(filename)
+
+                if fileext == '.active':
+                    print("Active bag file: ", filename)
+                    time.sleep(5)
+                    active_bag_found = True
+                    break
+
+        if not active_bag_found:
+            break
 
     print("Exiting - Joint Trajectory Action Complete!")
 

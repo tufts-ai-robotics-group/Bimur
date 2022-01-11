@@ -102,7 +102,7 @@
   <joint name="camera_to_frame" type="fixed">
     <parent link="frame"/>
     <child link = "camera_mount"/>
-    <origin xyz="0.54 0.54 1.54" rpy="${0} ${75*pi/180} ${-pi/2}"/>
+    <origin xyz="0.54 0.54 1.45" rpy="${0} ${75*pi/180} ${-pi/2}"/>
   </joint>
 
 </robot>
