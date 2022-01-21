@@ -86,6 +86,12 @@ def main():
             extracted_bag_path = root + os.sep + filename
             print("extracted_bag_path: ", extracted_bag_path)
 
+            output_dir = os.sep.join([output_path] + extracted_bag_path.split(os.sep)[-3:])
+            print("output_dir: ", output_dir)
+            if os.path.exists(output_dir):
+                print(output_dir + " already exists, so skipping ...\n")
+                break
+
             has_audio = False
             topics_has_video = {}
 
@@ -116,9 +122,6 @@ def main():
                 print("output_dir: ", output_dir)
                 if not os.path.exists(output_dir):
                     os.makedirs(output_dir)
-                else:
-                    print(output_dir + " already exists, so skipping ...\n")
-                    continue
 
                 if topic == '/cameras/left_hand_camera/image' or topic == '/camera/rgb/image_raw' \
                         or topic == '/camera/depth/image_raw':
