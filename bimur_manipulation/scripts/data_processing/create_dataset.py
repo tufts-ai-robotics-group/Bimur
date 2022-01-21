@@ -84,10 +84,10 @@ def add_data(discretize_temporal_bins_, behavior_, modality_, trial_, object_nam
         else:
             data_ = discretize_data(data_, discretize_temporal_bins_)
         behavior_data_[object_name_][trial_].setdefault(modality_ + '-discretized', data_)
-        dataset_metadata_[behavior_][object_name_][trial_].setdefault(modality_ + '-discretized', data_.shape)
+        dataset_metadata_[behavior_][object_name_][trial_][modality_ + '-discretized'] = data_.shape
     else:
         behavior_data_[object_name_][trial_].setdefault(modality_, data_)
-        dataset_metadata_[behavior_][object_name_][trial_].setdefault(modality_, data_.shape[1:])
+        dataset_metadata_[behavior_][object_name_][trial_][modality_] = data_.shape[1:]
 
     return behavior_data_, dataset_metadata_
 
@@ -136,21 +136,25 @@ if __name__ == "__main__":
         behavior_data = {}
         dataset_metadata.setdefault(behavior, {})
         for root, subdirs, files in os.walk(sensor_data_path):
-            print("root: ", root)
-            print("subdirs: ", subdirs)
-            print("files: ", len(files), files[:5])
             for filename in files:
-                print("filename ", filename)
                 filename, fileext = os.path.splitext(filename)
 
                 if fileext in file_formats:
                     root_list = root.split(os.sep)
                     curr_behavior = root_list[-2].split('_')[1].split('-')[1]
-                    print("curr_behavior: ", curr_behavior)
                     if curr_behavior == behavior:
                         modality = root_list[-1]
                         trial = root_list[-3].split('_')[0]  # .split('-')[1]
                         object_name = root_list[-4].split('_')[1]
+
+                        print("root: ", root)
+                        # print("subdirs: ", subdirs)
+                        print("files: ", len(files), files[:5])
+                        print("filename ", filename)
+                        print("curr_behavior: ", curr_behavior)
+                        print("modality: ", modality)
+                        print("trial: ", trial)
+                        print("object_name: ", object_name)
 
                         # Skipping processed data
                         dataset_temp_path = os.sep.join([dataset_path, behavior, object_name, trial])
@@ -181,15 +185,11 @@ if __name__ == "__main__":
                         behavior_data.setdefault(object_name, {}).setdefault(trial, {})
                         dataset_metadata[behavior].setdefault(object_name, {}).setdefault(trial, {})
 
-                        print("modality: ", modality)
-                        print("trial: ", trial)
-                        print("object_name: ", object_name)
-
                         if fileext == '.png':
                             data = read_images(root, files)
                             print("data: ", len(data))
                             behavior_data[object_name][trial].setdefault(modality, data)
-                            dataset_metadata[behavior][object_name][trial].setdefault(modality, data.shape[1:])
+                            dataset_metadata[behavior][object_name][trial][modality] = data.shape[1:]
                             # print("behavior_data: ", behavior_data)
                         elif fileext == '.wav':
                             audio_time_series, sampling_rate = librosa.load(root + os.sep + files[0], sr=44100)

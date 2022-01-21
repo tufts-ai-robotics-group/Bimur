@@ -491,6 +491,34 @@ if __name__ == "__main__":
         if not active_bag_found:
             break
 
+    # Check if all the bag files are stored properly
+    for root, subdirs, files in os.walk(sensor_data_path):
+        root_list = root.split(os.sep)
+
+        if 'trial' in root_list[-1]:
+            if len(files) not in [2, 13]:
+                print("Some bag files are missing:")
+                print("root: ", root)
+                print("files: ", len(files), files)
+                print("")
+
+                continue
+
+            for filename in files:
+                filename, fileext = os.path.splitext(filename)
+
+                if fileext != '.bag':
+                    continue
+
+                size = os.path.getsize(root + os.sep + filename + '.bag') / (1024 * 1024)  # MB
+                if size < 1:
+                    print("Nothing is stored in the bag file:")
+                    print("root: ", root)
+                    print("filename: ", filename + '.bag')
+                    print("size: ", size)
+                    print("")
+                    break
+
     print("Exiting - Joint Trajectory Action Complete!")
 
     """
