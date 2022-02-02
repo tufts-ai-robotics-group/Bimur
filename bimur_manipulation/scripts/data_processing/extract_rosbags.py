@@ -26,7 +26,8 @@ def extract_img_from_bag(bag_, topic_, output_dir_):
         else:
             cv_img = bridge.imgmsg_to_cv2(msg, 'bgr8')
 
-        cv2.imwrite(os.path.join(output_dir_, str(timestr) + '.png'), cv_img)
+        # Quality for JPEG encoding in range 1-100
+        cv2.imwrite(os.path.join(output_dir_, str(timestr) + '.jpg'), cv_img, [cv2.IMWRITE_JPEG_QUALITY, 80])
 
         count += 1
 
@@ -70,8 +71,8 @@ def main():
     """Extract files from rosbag
     """
 
-    sensor_data_path = r"/media/gyan/My Passport/UR5_Dataset/1_Raw/"
-    output_path = r"/media/gyan/My Passport/UR5_Dataset/2_Extracted/"
+    sensor_data_path = r"/media/gyan/Seagate Expansion Drive/UR5_Dataset_Trial-4/1_Raw/"
+    output_path = r"/media/gyan/Seagate Expansion Drive/UR5_Dataset_Trial-4/2_Extracted/"
 
     camera_topics_to_make_video = ['/camera/rgb/image_raw']
 
@@ -152,7 +153,7 @@ def main():
                         audio_output_dir = os.sep.join([output_path] + extracted_bag_path.split(os.sep)[-3:] + [audio_topic_name])
 
                         cmd = "ffmpeg -r " + str(frequency) + " -pattern_type glob -i '" + video_output_dir + os.sep + \
-                              "*.png' -i '" + audio_output_dir + os.sep + audio_topic_name + ".wav'" + \
+                              "*.jpg' -i '" + audio_output_dir + os.sep + audio_topic_name + ".wav'" + \
                               " -strict experimental -async 1 '" + video_output_dir + "_video.mp4' -y"
                         print("cmd: ", cmd)
                         p = subprocess.Popen(cmd, stdin=subprocess.PIPE, shell=True)
