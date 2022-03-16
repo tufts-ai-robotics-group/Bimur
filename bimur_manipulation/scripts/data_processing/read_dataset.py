@@ -117,7 +117,8 @@ if __name__ == "__main__":
                 if not os.path.exists(output_dir):
                     os.makedirs(output_dir)
                 for i in range(len(example)):
-                    cv2.imwrite(output_dir + os.sep + str(i) + ".png", example[i])
+                    # Quality for JPEG encoding in range 1-100
+                    cv2.imwrite(output_dir + os.sep + str(i) + ".jpg", example[i], [cv2.IMWRITE_JPEG_QUALITY, 80])
 
             elif modality in ['effort-discretized', 'position-discretized', 'velocity-discretized']:
                 plot_an_example_discretized(example, modality, output_dir)

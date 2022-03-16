@@ -104,10 +104,10 @@ def dump_data(data_, dataset_path_, behavior_, object_name_, trial_, modality_):
 
 if __name__ == "__main__":
 
-    sensor_data_path = r"/media/gyan/My Passport/UR5_Dataset/2_Extracted"
-    dataset_path = r"/media/gyan/My Passport/UR5_Dataset/3_Binary"
+    sensor_data_path = r"/media/wildog2-1/Samsung 870 QVO/UR5_Dataset/2_Extracted"
+    dataset_path = r"/media/wildog2-1/Samsung 870 QVO/UR5_Dataset/3_Binary"
 
-    file_formats = ['.wav', '.png', '.json']
+    file_formats = ['.wav', '.jpg', '.json']
 
     behaviors = ['look', 'grasp', 'pick', 'hold', 'shake', 'lower', 'drop', 'push']  # ['shake']
     discretize_temporal_bins = 10  # 0 for not discretizing
@@ -185,7 +185,7 @@ if __name__ == "__main__":
                         behavior_data.setdefault(object_name, {}).setdefault(trial, {})
                         dataset_metadata[behavior].setdefault(object_name, {}).setdefault(trial, {})
 
-                        if fileext == '.png':
+                        if fileext == '.jpg':
                             data = read_images(root, files)
                             print("data: ", len(data))
                             behavior_data[object_name][trial].setdefault(modality, data)
