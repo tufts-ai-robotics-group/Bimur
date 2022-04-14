@@ -39,7 +39,7 @@ def get_split_data(trials, objects_labels_, path, objects, behavior_, modality_)
                         y_split.append(objects_labels_[w])
                         break
             elif DETECTION_TASK == 'contents':
-                for c in ['rice', 'pasta', 'nutsandbolts', 'marbles', 'dices', 'buttons']:
+                for c in ['empty', 'rice', 'pasta', 'nutsandbolts', 'marbles', 'dices', 'buttons']:
                     if c == object_name_.split('-')[1]:
                         x_split.append(example.flatten())
                         y_split.append(objects_labels_[c])
@@ -99,7 +99,7 @@ if __name__ == "__main__":
         # for i, weight in enumerate(sorted([50, 150])):
             objects_labels[str(weight) + 'g'] = i
     elif DETECTION_TASK == 'contents':
-        for i, content in enumerate(sorted(['rice', 'pasta', 'nutsandbolts', 'marbles', 'dices', 'buttons'])):
+        for i, content in enumerate(sorted(['empty', 'rice', 'pasta', 'nutsandbolts', 'marbles', 'dices', 'buttons'])):
         # for i, content in enumerate(sorted(['dices', 'buttons'])):
             objects_labels[content] = i
     elif DETECTION_TASK == 'colors':
@@ -109,8 +109,6 @@ if __name__ == "__main__":
 
     test_objects_behaviors_modalities_proba_score = {}
     for test_object in sorted(metadata['grasp']['objects']):
-        if DETECTION_TASK == 'contents' and test_object.split('-')[1] == 'empty':
-            continue
         print("test_object: ", test_object)
         test_objects_behaviors_modalities_proba_score.setdefault(test_object, {})
         for behavior in metadata:
@@ -127,7 +125,9 @@ if __name__ == "__main__":
             # For each modality, combine weighted probability based on its accuracy score
             for modality in metadata[behavior]['modalities']:
                 print("modality: ", modality)
-                if modality in {'camera_depth_image_raw'}:
+                if behavior != 'look' and modality in {'camera_rgb_image_raw', 'camera_depth_image_raw'}:
+                    continue
+                elif behavior == 'look' and modality in {'camera_depth_image_raw'}:
                     continue
 
                 test_objects_behaviors_modalities_proba_score[test_object][behavior].setdefault(modality, {})
