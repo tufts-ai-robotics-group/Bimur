@@ -9,8 +9,8 @@ Bimur (Bi-manual UR5). This repository is for packages related to UR5 at AIR Lab
 
 ## Requirements
 
-1. Ubuntu 16.04
-2. ROS Kinetic
+1. Ubuntu 18.04
+2. ROS Melodic
 3. Gazebo 7.x
 
 ## ROS Packages
