@@ -14,7 +14,7 @@
   </include>
 
   <!-- send robot urdf to param server -->
-  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find bimur_description)/urdf/bimur_right_robot.urdf.xacro'"/>
+  <param name="robot_description" command="$(find xacro)/xacro '$(find bimur_description)/urdf/bimur_right_robot.urdf'"/>
 
   <!-- push robot_description to factory and spawn robot in gazebo -->
   <node name="spawn_gazebo_model" pkg="gazebo_ros" type="spawn_model"
