@@ -20,7 +20,7 @@ git clone https://github.com/ros-industrial/universal_robot.git
 
 Followed these steps from 
 ```
-git clone -b calibration_devel https://github.com/fmauch/universal_robot.git src/fmauch_universal_robot
+git clone -b calibration_devel https://github.com/fmauch/universal_robot.git 
 ```
 # install dependencies
 $ sudo apt update -qq
@@ -50,7 +50,6 @@ sudo apt-get install ros-melodic-ur-client-library
 
 ## Other Packages
 ```
-sudo apt-get install ros-melodic-astra-launch
 sudo apt-get install ros-melodic-catkin-virtualenv
 sudo apt-get install ros-melodic-control-toolbox
 sudo apt-get install ros-melodic-controller-interface
