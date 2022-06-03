@@ -1,5 +1,32 @@
 # Bimur
-Bimur (Bi-manual UR5). This repository is for packages related to UR5 at AIR Lab, Tufts.
+Bimur (Bi-manual UR5). This repository is for packages related to UR5 at MuLIP Lab, Tufts. This branch was created by updating the master branch. 
+
+Packages that were updated: 
+
+## Universal_Robots_ROS_Driver
+```
+git clone https://github.com/UniversalRobots/Universal_Robots_ROS_Driver.git
+```
+
+## robotiq_85_gripper  
+```
+git clone https://github.com/GT-RAIL/robotiq_85_gripper.git
+```
+
+## universal_robots
+```
+git clone https://github.com/ros-industrial/universal_robot.git
+```
+
+Followed these steps from 
+```
+git clone -b calibration_devel https://github.com/fmauch/universal_robot.git src/fmauch_universal_robot
+```
+# install dependencies
+$ sudo apt update -qq
+$ rosdep update
+$ rosdep install --from-paths src --ignore-src -y
+
 
 <img src="pics/Bimur.png" align="middle">
 
@@ -11,37 +38,47 @@ Bimur (Bi-manual UR5). This repository is for packages related to UR5 at AIR Lab
 
 1. Ubuntu 18.04
 2. ROS Melodic
-3. Gazebo 7.x
+3. Gazebo x.x
+
 
 ## ROS Packages
+```
+sudo apt-get install ros-melodic-ur-msgs
+sudo apt-get install ros-melodic-ur-client-library 
 
 ```
-sudo apt-get install ros-kinetic-astra-launch
-sudo apt-get install ros-kinetic-catkin-virtualenv
-sudo apt-get install ros-kinetic-control-toolbox
-sudo apt-get install ros-kinetic-controller-interface
-sudo apt-get install ros-kinetic-controller-manager-msgs
-sudo apt-get install ros-kinetic-controller-manager
-sudo apt-get install ros-kinetic-effort-controllers
-sudo apt-get install ros-kinetic-force-torque-sensor-controller
-sudo apt-get install ros-kinetic-gazebo-ros-control
-sudo apt-get install ros-kinetic-industrial-robot-status-interface
-sudo apt-get install ros-kinetic-joint-state-controller
-sudo apt-get install ros-kinetic-joint-state-publisher-gui
-sudo apt-get install ros-kinetic-joint-trajectory-controller
-sudo apt-get install ros-kinetic-moveit
-sudo apt-get install ros-kinetic-moveit-core
-sudo apt-get install ros-kinetic-moveit-kinematics
-sudo apt-get install ros-kinetic-moveit-ros-visualization
-sudo apt-get install ros-kinetic-position-controllers
-sudo apt-get install ros-kinetic-rqt-joint-trajectory-controller
-sudo apt-get install ros-kinetic-socketcan-interface
-sudo apt-get install ros-kinetic-soem
-sudo apt-get install ros-kinetic-speech-recognition-msgs
-sudo apt-get install ros-kinetic-ur-client-library
-sudo apt-get install ros-kinetic-velocity-controllers
+
+## Other Packages
+```
+sudo apt-get install ros-melodic-astra-launch
+sudo apt-get install ros-melodic-catkin-virtualenv
+sudo apt-get install ros-melodic-control-toolbox
+sudo apt-get install ros-melodic-controller-interface
+sudo apt-get install ros-melodic-controller-manager-msgs
+sudo apt-get install ros-melodic-controller-manager
+sudo apt-get install ros-melodic-effort-controllers
+sudo apt-get install ros-melodic-force-torque-sensor-controller
+sudo apt-get install ros-melodic-gazebo-ros-control
+sudo apt-get install ros-melodic-industrial-robot-status-interface
+sudo apt-get install ros-melodic-joint-state-controller
+sudo apt-get install ros-melodic-joint-state-publisher-gui
+sudo apt-get install ros-melodic-joint-trajectory-controller
+sudo apt-get install ros-melodic-moveit
+sudo apt-get install ros-melodic-moveit-core
+sudo apt-get install ros-melodic-moveit-kinematics
+sudo apt-get install ros-melodic-moveit-ros-visualization
+sudo apt-get install ros-melodic-position-controllers
+sudo apt-get install ros-melodic-rqt-joint-trajectory-controller
+sudo apt-get install ros-melodic-socketcan-interface
+sudo apt-get install ros-melodic-soem
+sudo apt-get install ros-melodic-speech-recognition-msgs
+sudo apt-get install ros-melodic-ur-client-library
+sudo apt-get install ros-melodic-velocity-controllers
 
 ```
+
+
+
 
 Following GitHub repo. was used (no need to clone them):
 ```
