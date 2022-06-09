@@ -1,7 +1,31 @@
 # Bimur
 Bimur (Bi-manual UR5). This repository is for packages related to UR5 at MuLIP Lab, Tufts. This branch was created by updating the master branch. 
 
-Packages that were updated: 
+<img src="pics/Bimur.png" align="middle">
+
+## Requirements
+
+1. Ubuntu 18.04
+2. ROS Melodic
+3. Gazebo x.x
+
+# Installation
+```
+git clone https://github.com/tufts-ai-robotics-group/Bimur.git`
+rosdep install --from-paths src --ignore-src -y
+cd ~/catkin_ws
+catkin_make
+
+```
+
+## What you might need to run:
+```
+$ sudo apt update -qq
+$ rosdep update
+$ rosdep install --from-paths src --ignore-src -y
+```
+
+Packages that were updated (Don't need to clone as they are already in the Bimur package): 
 
 ## Universal_Robots_ROS_Driver
 ```
@@ -13,37 +37,23 @@ git clone https://github.com/UniversalRobots/Universal_Robots_ROS_Driver.git
 git clone https://github.com/GT-RAIL/robotiq_85_gripper.git
 ```
 
-## universal_robots
+## universal_robot
 ```
 git clone https://github.com/ros-industrial/universal_robot.git
 ```
 
-Followed these steps from 
+## universal_robot (Slight changes in this repo - replace the universal_robot package)
 ```
 git clone -b calibration_devel https://github.com/fmauch/universal_robot.git 
 ```
-# install dependencies
-$ sudo apt update -qq
-$ rosdep update
-$ rosdep install --from-paths src --ignore-src -y
-
-
-<img src="pics/Bimur.png" align="middle">
-
-# Installation
-
-`git clone https://github.com/tufts-ai-robotics-group/Bimur.git`
-
-## Requirements
-
-1. Ubuntu 18.04
-2. ROS Melodic
-3. Gazebo x.x
 
 
 ## ROS Packages
 ```
 sudo apt-get install ros-melodic-ur-msgs
+
+git clone https://github.com/ros-industrial/ur_msgs.git ## Needed to clone this line into ~/catkin_ws/src in order to compile
+
 sudo apt-get install ros-melodic-ur-client-library 
 
 ```
@@ -77,22 +87,6 @@ sudo apt-get install ros-melodic-velocity-controllers
 ```
 
 
-
-
-Following GitHub repo. was used (no need to clone them):
-```
-git clone https://github.com/UniversalRobots/Universal_Robots_ROS_Driver.git
-git checkout b466518
-
-git clone -b calibration_devel https://github.com/fmauch/universal_robot.git
-git checkout e5a176c
-
-git clone https://github.com/StanleyInnovation/robotiq_85_gripper
-git checkout 2240a8c
-
-git clone https://github.com/ros-industrial/robotiq.git
-git checkout 66961ec
-```
 
 # Right Robot
 
